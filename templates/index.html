@@ -13,7 +13,6 @@
             align-items: center;
             height: 100vh;
         }
-
         .container {
             text-align: center;
             background-color: white;
@@ -21,15 +20,20 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
         .btn {
             width: 150px;
             margin: 10px;
+        }
+
+        .logo {
+            width: 200px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 <div class="container">
+    <img src="{{ url_for('static', filename='images/OH_logo.png') }}" alt="Open Hospital Logo" class="logo">
     <h1>Welcome to Open Hospital</h1>
     <div>
         <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
