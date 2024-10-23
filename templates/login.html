@@ -28,8 +28,10 @@
         .form-control {
             margin-bottom: 15px;
         }
-        .btn-primary {
+
+        .btn-primary, .btn-secondary {
             width: 100%;
+            margin-bottom: 10px;
         }
         .error-message {
             color: red;
@@ -50,6 +52,9 @@
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
+
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a> <!-- Back to Home button -->
+
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="error-message">
