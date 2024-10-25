@@ -8,6 +8,7 @@
     <style>
         body {
             background-color: #f8f9fa;
+            background-image: url('/static/images/OH_logo.png');
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,10 +20,26 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            height: 40%;
+
         }
         .btn {
             width: 150px;
             margin: 10px;
+        }
+        .btn-primary{
+            background-color: red;
+            border-color: red;
+        }
+
+        .btn:hover{
+            background-color: #FF8680;
+            color: white;
+            border-color: #FF8680;
+        }
+
+        .container-body{
+            margin-top: 47px;
         }
 
         .logo {
@@ -33,11 +50,12 @@
 </head>
 <body>
 <div class="container">
-    <img src="{{ url_for('static', filename='images/OH_logo.png') }}" alt="Open Hospital Logo" class="logo">
-    <h1>Welcome to Open Hospital</h1>
+    <div class="container-body">
+         <h1>Welcome to Open Hospital</h1>
     <div>
-        <a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
-        <a href="{{ url_for('create_account') }}" class="btn btn-secondary">Create Account</a>
+        <a href="{{ url_for('login') }}" class="btn btn-primary"><strong>Login</strong></a>
+        <a href="{{ url_for('create_account') }}" class="btn btn-secondary"><strong>Create Account</strong></a>
+    </div>
     </div>
 </div>
 </body>

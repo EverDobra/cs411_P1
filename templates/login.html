@@ -8,12 +8,17 @@
     <style>
         body {
             background-color: #f8f9fa;
+            background-image: url('/static/images/hands.jpeg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100%;
         }
         .login-container {
+            margin-top: 50px;
             background-color: white;
             padding: 30px;
             border-radius: 10px;
@@ -23,14 +28,23 @@
         h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #007bff;
+            color: red;
         }
         .form-control {
             margin-bottom: 15px;
         }
+
+        .btn:hover{
+            background-color: #FF8680;
+            color: white;
+            border-color: #FF8680;
+        }
+
         .btn-primary, .btn-secondary {
             width: 100%;
             margin-bottom: 10px;
+            background-color: red;
+            border-color: red;
         }
         .logo {
             width: 120px;
@@ -59,22 +73,20 @@
 <body>
     <div class="login-container">
         <img src="{{ url_for('static', filename='images/OH_logo.png') }}" alt="Open Hospital Logo" class="logo">
-        <h2>Login</h2>
+        <h2>LOGIN</h2>
         <form method="POST" action="/login">
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username" class="form-control" minlength="6" maxlength="16"
+                <input type="text" name="username" id="username" placeholder="Username" class="form-control" minlength="6" maxlength="16"
                        oninput="checkCharacterLimit(this)" required>
             </div>
             <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" class="form-control" minlength="6" maxlength="16"
+                <input type="password" name="password" id="password" placeholder="Password" class="form-control" minlength="6" maxlength="16"
                        oninput="checkCharacterLimit(this)" required>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary"><strong>Login</strong></button>
         </form>
 
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary"><strong>Back to Home</strong></a>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
