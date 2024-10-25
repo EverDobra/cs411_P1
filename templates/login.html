@@ -33,13 +33,11 @@
         .form-control {
             margin-bottom: 15px;
         }
-
-        .btn:hover{
+        .btn:hover {
             background-color: #FF8680;
             color: white;
             border-color: #FF8680;
         }
-
         .btn-primary, .btn-secondary {
             width: 100%;
             margin-bottom: 10px;
@@ -55,34 +53,26 @@
             color: red;
         }
     </style>
-    <script>
-        function checkCharacterLimit(input) {
-            const minLength = 6;
-            const maxLength = 16;
-
-            if (input.value.length < minLength) {
-                input.setCustomValidity('Minimum 6 characters required!');
-            } else if (input.value.length > maxLength) {
-                input.setCustomValidity('Character limit of 16 exceeded!');
-            } else {
-                input.setCustomValidity('');
-            }
-        }
-    </script>
 </head>
 <body>
     <div class="login-container">
         <img src="{{ url_for('static', filename='images/OH_logo.png') }}" alt="Open Hospital Logo" class="logo">
         <h2>LOGIN</h2>
-        <form method="POST" action="/login">
+        <form method="POST" action="{{ url_for('login') }}">
             <div class="form-group">
-                <input type="text" name="username" id="username" placeholder="Username" class="form-control" minlength="6" maxlength="16"
-                       oninput="checkCharacterLimit(this)" required>
+                <input type="text" name="username" id="username" placeholder="Username" class="form-control" minlength="6" maxlength="16" required>
             </div>
             <div class="form-group">
-                <input type="password" name="password" id="password" placeholder="Password" class="form-control" minlength="6" maxlength="16"
-                       oninput="checkCharacterLimit(this)" required>
+                <input type="password" name="password" id="password" placeholder="Password" class="form-control" minlength="6" maxlength="16" required>
             </div>
+
+            {% if show_captcha %}
+            <div class="form-group">
+                <label>CAPTCHA: What is {{ num1 }} + {{ num2 }}?</label>
+                <input type="text" name="captcha_answer" class="form-control" required>
+            </div>
+            {% endif %}
+
             <button type="submit" class="btn btn-primary"><strong>Login</strong></button>
         </form>
 
