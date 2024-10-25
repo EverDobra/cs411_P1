@@ -53,6 +53,7 @@
             color: red;
         }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="login-container">
@@ -67,10 +68,7 @@
             </div>
 
             {% if show_captcha %}
-            <div class="form-group">
-                <label>CAPTCHA: What is {{ num1 }} + {{ num2 }}?</label>
-                <input type="text" name="captcha_answer" class="form-control" required>
-            </div>
+            <div class="g-recaptcha" data-sitekey="6LcxAmwqAAAAAHDB1mPJ6AyBcJmx_qMWqb20CBPn"></div>
             {% endif %}
 
             <button type="submit" class="btn btn-primary"><strong>Login</strong></button>
