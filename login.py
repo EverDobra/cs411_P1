@@ -8,7 +8,8 @@ app.secret_key = 'secret_key_here'
 users = {
     'doctor_user': {'password': generate_password_hash('password1'), 'role': 'doctor'},
     'admin_user': {'password': generate_password_hash('password2'), 'role': 'admin'},
-    'test_user': {'password': generate_password_hash('password3'), 'role': 'user'}
+    'test_user': {'password': generate_password_hash('password3'), 'role': 'user'},
+    'lab_user': {'password': generate_password_hash('password4'), 'role': 'laboratorist'}
 }
 
 failed_attempts = {}
@@ -79,6 +80,8 @@ def login():
                 return redirect(url_for('doctor_dashboard'))
             elif users[username]['role'] == 'admin':
                 return redirect(url_for('admin_dashboard'))
+            elif users[username]['role'] == 'laboratorist':
+                return redirect(url_for('lab_dashboard'))
             else:
                 return redirect(url_for('user_dashboard'))
         else:
@@ -108,6 +111,10 @@ def admin_dashboard():
 def user_dashboard():
     return render_template('user_dashboard.html')
 
+
+@app.route('/lab_dashboard')
+def lab_dashboard():
+    return render_template('lab_dashboard.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
