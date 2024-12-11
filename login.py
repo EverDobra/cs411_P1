@@ -25,10 +25,6 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/create_account')
-def create_account():
-    return render_template('create_account.html')
-
 # In-memory patient database
 
 @app.route('/patient_admission', methods=['GET', 'POST'])
@@ -146,6 +142,57 @@ def login():
                 return render_template('login.html', show_captcha=True)
 
     return render_template('login.html', show_captcha=show_captcha)
+
+
+@app.route('/manage_users', methods=['GET', 'POST'])
+@app.route('/manage_users', methods=['GET', 'POST'])
+@app.route('/manage_users', methods=['GET', 'POST'])
+def manage_users():
+    if 'username' not in session or session['username'] is None:
+        flash('You must be logged in to access this page.', 'danger')
+        return redirect(url_for('login'))
+
+    global users
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+
+        if action == 'add':
+            username = request.form['username']
+            password = request.form['password']
+            role = request.form['role']
+
+            if username in users:
+                flash('User already exists!', 'danger')
+            else:
+                users[username] = {
+                    'password': generate_password_hash(password),
+                    'role': role
+                }
+                flash('User added successfully!', 'success')
+
+        elif action == 'update':
+            username = request.form['username']
+            password = request.form['password']
+            role = request.form['role']
+
+            if username in users:
+                users[username]['password'] = generate_password_hash(password)
+                users[username]['role'] = role
+                flash('User updated successfully!', 'success')
+            else:
+                flash('User not found!', 'danger')
+
+        elif action == 'delete':
+            username = request.form['username']
+            if username in users:
+                del users[username]
+                flash('User deleted successfully!', 'success')
+            else:
+                flash('User not found!', 'danger')
+
+    return render_template('manage_users.html', users=users)
+
 
 
 # Dashboard routes

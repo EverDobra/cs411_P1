@@ -7,14 +7,93 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
-            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Gradient background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
         }
+
         .container {
-            background-color: white;
-            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9); /* Slight opacity to separate from background */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Enhanced shadow for better aesthetics */
+            width: 800px; /* Widened container */
+            max-width: 95%; /* Responsive scaling */
+        }
+
+        h2 {
+            font-size: 36px; /* Larger header */
+            font-weight: bold; /* Bold font */
+            color: #007B8F; /* Matching teal color for branding */
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow for depth */
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333; /* High contrast for better readability */
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #007B8F; /* Consistent teal border */
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background-color: #007B8F;
+            border-color: #007B8F;
+            color: white;
+            width: 100%;
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 10px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for buttons */
+        }
+
+        .btn-primary:hover {
+            background-color: #005f6b;
+            border-color: #005f6b;
+            transform: scale(1.05); /* Slight scaling for hover effect */
+        }
+
+        h3 {
+            font-size: 22px;
+            color: #007B8F; /* Matching teal color for consistency */
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .table {
+            margin-top: 20px;
             border-radius: 10px;
+            overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: #f2f2f2;
+            border: 1px solid #007B8F;
+            color: #007B8F;
+            width: 100%;
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 10px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e6f7fa;
+            color: #005f6b;
+            transform: scale(1.05); /* Hover effect */
         }
     </style>
 </head>
@@ -49,7 +128,7 @@
         <button type="submit" class="btn btn-primary">Add Patient</button>
     </form>
 
-    <h3 class="mt-4">Registered Patients</h3>
+    <h3>Registered Patients</h3>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -75,7 +154,7 @@
         </tbody>
     </table>
 
-    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Admin Dashboard</a>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
 </div>
 </body>
 </html>

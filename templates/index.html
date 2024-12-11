@@ -7,53 +7,71 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
-            background-image: url('/images/OH_logo_old.png');
+            margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Gradient background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
         }
+
         .container {
             text-align: center;
-            background-color: white;
-            padding: 5%;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            height: 40%;
-
-        }
-        .btn {
-            width: 150px;
-            margin: 10px;
-        }
-        .btn-primary{
-            background-color: red;
-            border-color: red;
+            background-color: rgba(255, 255, 255, 0.9); /* Slight opacity to separate from background */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Enhanced shadow for better aesthetics */
+            width: 450px;
         }
 
-        .btn:hover{
-            background-color: #FF8680;
+        .container h1 {
+            font-size: 32px;
+            color: #007B8F; /* Matching teal color for branding */
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow for depth */
+        }
+
+        .container p {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #007B8F;
+            border-color: #007B8F;
             color: white;
-            border-color: #FF8680;
+            width: 200px;
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 12px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for buttons */
         }
 
+        .btn-primary:hover {
+            background-color: #005f6b;
+            border-color: #005f6b;
+            transform: scale(1.05); /* Slight scaling for hover effect */
+        }
 
         .logo {
-            width: 200px;
+            width: 120px; /* Slightly increased the size of the logo */
             margin-bottom: 20px;
+            border-radius: 50%; /* Optional rounded logo if it fits */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="container-body">
-         <h1>Welcome to Open Hospital</h1>
-    <div>
+    <img src="{{ url_for('static', filename='images/Medlink_symbol.png') }}" alt="MedLink Logo" class="logo">
+    <h1>Welcome to MedLink</h1>
+    <p>Connecting Care, Simplifying Lives.</p>
         <a href="{{ url_for('login') }}" class="btn btn-primary"><strong>Login</strong></a>
-        <a href="{{ url_for('create_account') }}" class="btn btn-secondary"><strong>Create Account</strong></a>
-    </div>
-    </div>
 </div>
 </body>
 </html>

@@ -5,41 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Patients</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Gradient background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Slight opacity to separate from background */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Enhanced shadow for better aesthetics */
+            width: 90%; /* Responsive container width */
+            max-width: 1200px; /* Ensure max width for larger screens */
+        }
+
+        h2 {
+            font-size: 36px; /* Larger header */
+            font-weight: bold; /* Bold font */
+            color: #007B8F; /* Matching teal color for branding */
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow for depth */
+        }
+
+        .table {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #007B8F;
+            border-color: #007B8F;
+            color: white;
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 5px 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for buttons */
+        }
+
+        .btn-primary:hover {
+            background-color: #005f6b;
+            border-color: #005f6b;
+            transform: scale(1.05); /* Slight scaling for hover effect */
+        }
+
+        .btn-danger {
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 5px 12px;
+        }
+
+        .btn-secondary {
+            background-color: #f2f2f2;
+            border: 1px solid #007B8F;
+            color: #007B8F;
+            width: 100%;
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 10px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e6f7fa;
+            color: #005f6b;
+            transform: scale(1.05); /* Hover effect */
+        }
+
+        .modal-header {
+            background-color: #007B8F;
+            color: white;
+            border-radius: 15px 15px 0 0;
+            font-weight: bold;
+        }
+
+        .modal-footer .btn-primary {
+            background-color: #007B8F;
+            border-color: #007B8F;
+        }
+
+        .modal-footer .btn-secondary {
+            background-color: #f2f2f2;
+            border: 1px solid #007B8F;
+            color: #007B8F;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
+<div class="container">
     <h2>Manage Patients</h2>
-    <table class="table table-striped mt-4">
+    <table class="table table-striped">
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Date of Birth</th>
-                <th>Gender</th>
-                <th>Contact</th>
-                <th>Emergency Contact</th>
-                <th>Room</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Gender</th>
+            <th>Contact</th>
+            <th>Emergency Contact</th>
+            <th>Room</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
-            {% for patient in patients %}
-            <tr>
-                <td>{{ patient.id }}</td>
-                <td>{{ patient.name }}</td>
-                <td>{{ patient.dob }}</td>
-                <td>{{ patient.gender }}</td>
-                <td>{{ patient.contact }}</td>
-                <td>{{ patient.emergency_contact }}</td>
-                <td>{{ patient.room if patient.room else 'Not Assigned' }}</td>
-                <td>
-                    <button class="btn btn-primary btn-sm" onclick="openEditModal({{ patient.id }})">Edit</button>
-                    <form action="{{ url_for('delete_patient', patient_id=patient.id) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
+        {% for patient in patients %}
+        <tr>
+            <td>{{ patient.id }}</td>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.dob }}</td>
+            <td>{{ patient.gender }}</td>
+            <td>{{ patient.contact }}</td>
+            <td>{{ patient.emergency_contact }}</td>
+            <td>{{ patient.room if patient.room else 'Not Assigned' }}</td>
+            <td>
+                <button class="btn btn-primary btn-sm" onclick="openEditModal({{ patient.id }})">Edit</button>
+                <form action="{{ url_for('delete_patient', patient_id=patient.id) }}" method="POST"
+                      style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 
@@ -92,7 +188,7 @@
         </div>
     </div>
 
-    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Admin Dashboard</a>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
 </div>
 
 <script>

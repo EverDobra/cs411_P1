@@ -7,62 +7,116 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Gradient background */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
         }
 
         .dashboard-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9); /* Slight opacity to separate from background */
+            padding: 40px;
+            border-radius: 25px; /* Rounded corners */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Enhanced shadow for better aesthetics */
             text-align: center;
+            width: 500px; /* Adjusted container width */
+            border: 1px solid #e6e6e6; /* Subtle border */
         }
 
         .icon {
             font-size: 100px;
-            color: #28a745;
+            color: #246378;
+            margin-bottom: 15px;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 50%; /* Circular background */
+            background-color: #f2f2f2; /* Light background for the icon */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Shadow for the icon */
         }
 
         h2 {
-            color: #28a745;
-            margin-bottom: 20px;
+            color: #246378;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            letter-spacing: 1px; /* Slight letter spacing */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow for depth */
         }
 
         .btn-container {
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         .btn {
-            width: 200px;
+            width: 220px; /* Wider buttons */
             margin: 10px;
+            font-weight: bold;
+            border-radius: 15px; /* Rounded buttons */
+            padding: 12px;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for buttons */
+            text-transform: uppercase; /* Uppercase text for buttons */
+        }
+
+        /* Button colors */
+        .btn-patient-admission {
+            background-color: #37000a;
+            border-color: #37000a;
+        }
+
+        .btn-manage-patients {
+            background-color: #8A7090;
+            border-color: #8A7090;
+        }
+
+        .btn-manage-users {
+            background-color: #243E36;
+            border-color: #243E36;
+        }
+
+        .btn-lab-dashboard {
+            background-color: #390099;
+            border-color: #390099;
+        }
+
+        .btn-doctor-dashboard {
+            background-color: #005f6b;
+            border-color: #005f6b;
+        }
+
+        .btn-back-home {
+            background-color: #F6EFEE;
+            color: #37000a;
+            border-color: #0d1531;
+        }
+
+        .btn:hover {
+            filter: brightness(90%); /* Slightly darker color on hover */
         }
     </style>
 </head>
 <body>
 <div class="dashboard-container">
     <div class="icon">
-        &#x1F4BB; <!-- Admin symbol (laptop) -->
+        &#x1F4BB; <!-- Icon (Laptop) -->
     </div>
     <h2>Admin Dashboard</h2>
     <div class="btn-container">
-        <!-- Link to Patient Admission Module -->
-        <a href="{{ url_for('patient_admission') }}" class="btn btn-primary">Patient Admission</a>
-
-        <!-- Link to User Management -->
-        <a href="{{ url_for('manage_patients') }}" class="btn btn-warning">Manage Patients</a>
-
-        <!-- Link to Laboratory Dashboard -->
-        <a href="{{ url_for('lab_dashboard') }}" class="btn btn-info">Lab Dashboard</a>
-
-        <!-- Link to Doctor Dashboard -->
-        <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-success">Doctor Dashboard</a>
-
+        <!-- Patient Admission -->
+        <a href="{{ url_for('patient_admission') }}" class="btn btn-patient-admission">Patient Admission</a>
+        <!-- Manage Patients -->
+        <a href="{{ url_for('manage_patients') }}" class="btn btn-manage-patients">Manage Patients</a>
+        <!-- Manage Users -->
+        <a href="{{ url_for('manage_users') }}" class="btn btn-manage-users">Manage Users</a>
+        <!-- Lab Dashboard -->
+        <a href="{{ url_for('lab_dashboard') }}" class="btn btn-lab-dashboard">Lab Dashboard</a>
+        <!-- Doctor Dashboard -->
+        <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-doctor-dashboard">Doctor Dashboard</a>
         <!-- Back to Home -->
-        <a href="{{ url_for('index') }}" class="btn btn-danger">Back to Home</a>
+        <a href="{{ url_for('index') }}" class="btn btn-back-home">Back to Home</a>
     </div>
 </div>
 </body>

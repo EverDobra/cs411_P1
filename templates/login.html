@@ -12,29 +12,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Default gradient */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
-        }
-
-        /* Adding noise texture overlay to improve gradient appearance */
-        html {
-            background: linear-gradient(135deg, #004a5e, #b0e0e6), url('/static/images/noise-texture.png');
-            background-size: cover;
-            background-blend-mode: overlay;
-        }
-
-        /* If noise texture fails, fallback gradient */
-        @supports not (background-blend-mode: overlay) {
-            html {
-                background: linear-gradient(135deg, #004a5e 0%, #03687c 50%, #b0e0e6 100%);
-            }
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Subtle gradient background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .login-container {
             background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 6px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+            padding: 60px 40px; /* Elongating the container with extra padding */
+            border-radius: 20px; /* Slightly more rounded corners for elegance */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 8px 8px rgba(0, 0, 0, 0.1);
             width: 400px;
             text-align: center;
         }
@@ -47,13 +33,13 @@
         h2 {
             font-size: 28px;
             color: #007B8F; /* Teal color for branding */
-            margin-bottom: 30px;
+            margin-bottom: 40px; /* Extra space below heading for breathing room */
         }
 
         .form-control {
-            margin-bottom: 20px;
+            margin-bottom: 25px; /* Increased spacing between inputs for clarity */
             border-radius: 8px;
-            border: 1px solid #007B8F; /* Consistent teal border */
+            border: 1px solid #007B8F;
         }
 
         .btn-primary {
@@ -61,9 +47,10 @@
             background-color: #007B8F;
             border-color: #007B8F;
             color: white;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: bold;
-            padding: 10px;
+            padding: 12px; /* Larger button for better usability */
+            margin-bottom: 20px;
         }
 
         .btn-primary:hover {
@@ -76,9 +63,9 @@
             background-color: #f2f2f2;
             border: 1px solid #007B8F;
             color: #007B8F;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: bold;
-            padding: 10px;
+            padding: 12px;
         }
 
         .btn-secondary:hover {
@@ -87,21 +74,27 @@
         }
 
         .error-message {
-            color: #d9534f; /* Red for error messages */
+            color: #d9534f;
             margin-top: 10px;
         }
 
-        /* Additional optional gradient settings to prevent color banding */
-        body::before {
+        /* Add subtle decorative lines to frame the container */
+        .login-container::before,
+        .login-container::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #004a5e, #b0e0e6);
-            opacity: 0.9;
-            z-index: -1; /* Ensure this stays behind other elements */
+            height: 80%;
+            width: 2px;
+            background-color: rgba(0, 123, 143, 0.3);
+            top: 10%;
+        }
+
+        .login-container::before {
+            left: calc(50% - 210px); /* Left line at the edge of the container */
+        }
+
+        .login-container::after {
+            right: calc(50% - 210px); /* Right line at the edge of the container */
         }
     </style>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -124,17 +117,26 @@
 
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Home</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="error-message">
-                    {% for category, message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+        {% if messages %}
+        <ul class="error-message">
+            {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         {% endwith %}
     </div>
+    <!-- JavaScript to clear flash messages -->
+    <script>
+        setTimeout(function () {
+            const flashMessages = document.querySelector('.flash-messages');
+            if (flashMessages) {
+                flashMessages.style.display = 'none';
+            }
+        }, 5000); // Clear after 5 seconds
+    </script>
 </body>
 </html>

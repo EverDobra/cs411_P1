@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Gradient background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Slight opacity to separate from background */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Enhanced shadow for better aesthetics */
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        h2 {
+            font-size: 36px;
+            font-weight: bold;
+            color: #007B8F; /* Matching teal color for branding */
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow for depth */
+        }
+
+        .table {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background-color: #218380; /* Updated blue button color */
+            border-color: #218380;
+            border-radius: 10px;
+            font-weight: bold;
+            padding: 6px 12px;
+        }
+
+        .btn-danger {
+            background-color: #F71735; /* Updated red button color */
+            border-color: #F71735;
+            border-radius: 10px;
+            font-weight: bold;
+            padding: 6px 12px;
+        }
+
+        .btn-secondary {
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .form-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e9f7fa;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h3 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007B8F;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .form-container .btn-primary {
+            width: 100%;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Manage Users</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for username, details in users.items() %}
+        <tr>
+            <td>{{ username }}</td>
+            <td>{{ details.role }}</td>
+            <td class="btn-container">
+                <button class="btn btn-primary btn-sm" onclick="openEditModal('{{ username }}')">Edit</button>
+                <form action="{{ url_for('manage_users') }}" method="POST" style="display:inline;">
+                    <input type="hidden" name="username" value="{{ username }}">
+                    <input type="hidden" name="action" value="delete">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="form-container">
+        <h3>Add New User</h3>
+        <form action="{{ url_for('manage_users') }}" method="POST">
+            <input type="hidden" name="action" value="add">
+            <div class="form-group">
+                <label for="newUsername">Username:</label>
+                <input type="text" id="newUsername" name="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">Password:</label>
+                <input type="password" id="newPassword" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="newRole">Role:</label>
+                <select id="newRole" name="role" class="form-control" required>
+                    <option value="admin">Admin</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="user">User</option>
+                    <option value="laboratorist">Laboratorist</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add User</button>
+        </form>
+    </div>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+</div>
+
+<script>
+    function openEditModal(username) {
+        document.getElementById('modalUsername').value = username;
+        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+        modal.show();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
