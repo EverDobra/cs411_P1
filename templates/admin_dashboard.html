@@ -29,22 +29,41 @@
 
         h2 {
             color: #28a745;
+            margin-bottom: 20px;
         }
 
-        .btn-secondary {
+        .btn-container {
             margin-top: 20px;
+        }
+
+        .btn {
+            width: 200px;
+            margin: 10px;
         }
     </style>
 </head>
 <body>
 <div class="dashboard-container">
     <div class="icon">
-        &#x1F4BB; <!-- Admin symbol (bar chart) -->
+        &#x1F4BB; <!-- Admin symbol (laptop) -->
     </div>
     <h2>Admin Dashboard</h2>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    <div class="btn-container">
+        <!-- Link to Patient Admission Module -->
+        <a href="{{ url_for('patient_admission') }}" class="btn btn-primary">Patient Admission</a>
+
+        <!-- Link to User Management -->
+        <a href="{{ url_for('manage_patients') }}" class="btn btn-warning">Manage Patients</a>
+
+        <!-- Link to Laboratory Dashboard -->
+        <a href="{{ url_for('lab_dashboard') }}" class="btn btn-info">Lab Dashboard</a>
+
+        <!-- Link to Doctor Dashboard -->
+        <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-success">Doctor Dashboard</a>
+
+        <!-- Back to Home -->
+        <a href="{{ url_for('index') }}" class="btn btn-danger">Back to Home</a>
+    </div>
 </div>
 </body>
 </html>
-
-

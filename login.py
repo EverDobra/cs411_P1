@@ -13,7 +13,7 @@ users = {
 }
 
 failed_attempts = {}
-
+patients = []
 
 def reset_failed_attempts(username):
     failed_attempts[username] = 0
@@ -29,6 +29,58 @@ def index():
 def create_account():
     return render_template('create_account.html')
 
+# In-memory patient database
+
+@app.route('/patient_admission', methods=['GET', 'POST'])
+def patient_admission():
+    if 'username' not in session or session['username'] is None:
+        flash('You must be logged in to access this page.', 'danger')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Capture patient data from the form
+        patient = {
+            'id': len(patients) + 1,
+            'name': request.form['name'],
+            'dob': request.form['dob'],
+            'gender': request.form['gender'],
+            'contact': request.form['contact'],
+            'emergency_contact': request.form['emergency_contact']
+        }
+        patients.append(patient)
+        flash('Patient record added successfully!', 'success')
+        return redirect(url_for('patient_admission'))
+
+    return render_template('patient_admission.html', patients=patients)
+
+@app.route('/manage_patients', methods=['GET', 'POST'])
+def manage_patients():
+    if 'username' not in session or session['username'] is None:
+        flash('You must be logged in to access this page.', 'danger')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Handle editing or assigning a room
+        patient_id = int(request.form['patient_id'])
+        for patient in patients:
+            if patient['id'] == patient_id:
+                patient['name'] = request.form['name']
+                patient['dob'] = request.form['dob']
+                patient['gender'] = request.form['gender']
+                patient['contact'] = request.form['contact']
+                patient['emergency_contact'] = request.form['emergency_contact']
+                patient['room'] = request.form['room']
+                flash('Patient details updated successfully!', 'success')
+                break
+
+    return render_template('manage_patients.html', patients=patients)
+
+@app.route('/delete_patient/<int:patient_id>', methods=['POST'])
+def delete_patient(patient_id):
+    global patients
+    patients = [patient for patient in patients if patient['id'] != patient_id]
+    flash('Patient record deleted successfully!', 'success')
+    return redirect(url_for('manage_patients'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

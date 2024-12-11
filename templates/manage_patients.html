@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Patients</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Manage Patients</h2>
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Gender</th>
+                <th>Contact</th>
+                <th>Emergency Contact</th>
+                <th>Room</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient.id }}</td>
+                <td>{{ patient.name }}</td>
+                <td>{{ patient.dob }}</td>
+                <td>{{ patient.gender }}</td>
+                <td>{{ patient.contact }}</td>
+                <td>{{ patient.emergency_contact }}</td>
+                <td>{{ patient.room if patient.room else 'Not Assigned' }}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm" onclick="openEditModal({{ patient.id }})">Edit</button>
+                    <form action="{{ url_for('delete_patient', patient_id=patient.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal for Editing Patient -->
+    <div class="modal" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ url_for('manage_patients') }}">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Patient</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="patient_id" id="patient_id">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dob" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="dob" name="dob" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-control" id="gender" name="gender" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact" class="form-label">Contact</label>
+                            <input type="text" class="form-control" id="contact" name="contact" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emergency_contact" class="form-label">Emergency Contact</label>
+                            <input type="text" class="form-control" id="emergency_contact" name="emergency_contact" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="room" class="form-label">Room</label>
+                            <input type="text" class="form-control" id="room" name="room">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Admin Dashboard</a>
+</div>
+
+<script>
+    function openEditModal(patientId) {
+        const patient = {{ patients | tojson }};
+        const selectedPatient = patient.find(p => p.id === patientId);
+
+        document.getElementById('patient_id').value = selectedPatient.id;
+        document.getElementById('name').value = selectedPatient.name;
+        document.getElementById('dob').value = selectedPatient.dob;
+        document.getElementById('gender').value = selectedPatient.gender;
+        document.getElementById('contact').value = selectedPatient.contact;
+        document.getElementById('emergency_contact').value = selectedPatient.emergency_contact;
+        document.getElementById('room').value = selectedPatient.room || '';
+
+        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+        modal.show();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

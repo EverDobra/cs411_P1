@@ -3,62 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Hospital - Login</title>
+    <title>MedLink - Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-            background-image: url('/static/images/hands.jpeg');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
+        html, body {
+            height: 100%;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Default gradient */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
         }
+
+        /* Adding noise texture overlay to improve gradient appearance */
+        html {
+            background: linear-gradient(135deg, #004a5e, #b0e0e6), url('/static/images/noise-texture.png');
+            background-size: cover;
+            background-blend-mode: overlay;
+        }
+
+        /* If noise texture fails, fallback gradient */
+        @supports not (background-blend-mode: overlay) {
+            html {
+                background: linear-gradient(135deg, #004a5e 0%, #03687c 50%, #b0e0e6 100%);
+            }
+        }
+
         .login-container {
-            margin-top: 50px;
             background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 350px;
-        }
-        h2 {
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 6px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+            width: 400px;
             text-align: center;
+        }
+
+        .login-container img {
+            width: 100px;
             margin-bottom: 20px;
-            color: red;
         }
+
+        h2 {
+            font-size: 28px;
+            color: #007B8F; /* Teal color for branding */
+            margin-bottom: 30px;
+        }
+
         .form-control {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #007B8F; /* Consistent teal border */
         }
-        .btn:hover {
-            background-color: #FF8680;
-            color: white;
-            border-color: #FF8680;
-        }
-        .btn-primary, .btn-secondary {
+
+        .btn-primary {
             width: 100%;
-            margin-bottom: 10px;
-            background-color: red;
-            border-color: red;
+            background-color: #007B8F;
+            border-color: #007B8F;
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+            padding: 10px;
         }
-        .logo {
-            width: 120px;
-            display: block;
-            margin: 0 auto 20px;
+
+        .btn-primary:hover {
+            background-color: #005f6b;
+            border-color: #005f6b;
         }
+
+        .btn-secondary {
+            width: 100%;
+            background-color: #f2f2f2;
+            border: 1px solid #007B8F;
+            color: #007B8F;
+            border-radius: 8px;
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e6f7fa;
+            color: #005f6b;
+        }
+
         .error-message {
-            color: red;
+            color: #d9534f; /* Red for error messages */
+            margin-top: 10px;
+        }
+
+        /* Additional optional gradient settings to prevent color banding */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6);
+            opacity: 0.9;
+            z-index: -1; /* Ensure this stays behind other elements */
         }
     </style>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="login-container">
-        <img src="{{ url_for('static', filename='images/OH_logo.png') }}" alt="Open Hospital Logo" class="logo">
-        <h2>LOGIN</h2>
+        <img src="{{ url_for('static', filename='images/Medlink_symbol.png') }}" alt="MedLink Logo">
+        <h2>Welcome to MedLink</h2>
         <form method="POST" action="{{ url_for('login') }}">
             <div class="form-group">
                 <input type="text" name="username" id="username" placeholder="Username" class="form-control" minlength="6" maxlength="16" required>
@@ -68,13 +119,12 @@
             </div>
 
             {% if show_captcha %}
-            <div class="g-recaptcha" data-sitekey="6LcxAmwqAAAAAHDB1mPJ6AyBcJmx_qMWqb20CBPn"></div>
+            <div class="g-recaptcha mb-3" data-sitekey="6LcxAmwqAAAAAHDB1mPJ6AyBcJmx_qMWqb20CBPn"></div>
             {% endif %}
 
-            <button type="submit" class="btn btn-primary"><strong>Login</strong></button>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
-
-        <a href="{{ url_for('index') }}" class="btn btn-secondary"><strong>Back to Home</strong></a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Home</a>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
