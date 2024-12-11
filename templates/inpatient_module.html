@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpatient Module</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        h2 {
+            font-size: 36px;
+            font-weight: bold;
+            color: #007B8F;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .table {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background-color: #218380;
+            border-color: #218380;
+            border-radius: 10px;
+            width: 100%;
+            font-weight: bold;
+            padding: 12px;
+        }
+
+        .btn-danger {
+            background-color: #F71735;
+            border-color: #F71735;
+            border-radius: 10px;
+            font-weight: bold;
+            padding: 12px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            text-align: center;
+        }
+
+        .room-status {
+            margin-bottom: 30px;
+        }
+
+        .room-status h3 {
+            font-size: 28px;
+            color: #007B8F;
+            margin-bottom: 15px;
+        }
+
+        .room-status table {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        .room-status th, .room-status td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .room-status th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Inpatient Module</h2>
+
+    <!-- Room Status -->
+    <div class="room-status">
+        <h3>Room Status</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Room</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for room, status in rooms.items() %}
+            <tr>
+                <td>Room {{ room }}</td>
+                <td>{{ status }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table for Assigning Rooms -->
+    <h3>Assign Rooms to Patients</h3>
+    <form method="POST" action="{{ url_for('inpatient_module') }}" onsubmit="return checkRoomAssignment(event);">
+        <input type="hidden" name="action" value="assign_room">
+        <div class="form-group">
+            <label for="patient_id">Select Patient:</label>
+            <select id="patient_id" name="patient_id" class="form-control" required>
+                {% for patient in patients %}
+                <option value="{{ patient.id }}" data-room="{{ patient.room }}">{{ patient.name }} (ID: {{ patient.id
+                    }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="room">Select Room:</label>
+            <select id="room" name="room" class="form-control" required>
+                {% for room, status in rooms.items() %}
+                {% if status == 'Vacant' %}
+                <option value="{{ room }}">Room {{ room }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Assign Room</button>
+    </form>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Room Reassignment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>The selected patient is already assigned to Room <span id="currentRoom"></span>. Do you want to
+                        reassign to Room <span id="newRoom"></span>?</p>
+                </div>
+                <div class="modal-footer btn-container">
+                    <button type="button" class="btn btn-primary" id="confirmReassign">Reassign</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table for Inpatients -->
+    <h3>Current Inpatients</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Gender</th>
+            <th>Contact</th>
+            <th>Admission Date</th>
+            <th>Room</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for patient in patients %}
+        {% if patient.room %}
+        <tr>
+            <td>{{ patient.id }}</td>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.dob }}</td>
+            <td>{{ patient.gender }}</td>
+            <td>{{ patient.contact }}</td>
+            <td>{{ patient.admission_date }}</td>
+            <td>{{ patient.room }}</td>
+            <td class="btn-container">
+                <form action="{{ url_for('inpatient_module') }}" method="POST" style="display:inline;">
+                    <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                    <input type="hidden" name="action" value="discharge">
+                    <button type="submit" class="btn btn-danger btn-sm">Discharge</button>
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Admin Dashboard</a>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function checkRoomAssignment(event) {
+        const patientSelect = document.getElementById('patient_id');
+        const roomSelect = document.getElementById('room');
+        const currentRoom = patientSelect.options[patientSelect.selectedIndex].dataset.room;
+        const newRoom = roomSelect.value;
+
+        if (currentRoom && currentRoom !== newRoom) {
+            event.preventDefault();
+            document.getElementById('currentRoom').textContent = currentRoom;
+            document.getElementById('newRoom').textContent = newRoom;
+            const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            modal.show();
+
+            document.getElementById('confirmReassign').onclick = function () {
+                document.querySelector('form').submit();
+            };
+        }
+    }
+</script>
+</body>
+</html>

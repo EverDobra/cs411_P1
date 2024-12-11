@@ -93,6 +93,12 @@
             border-color: #0d1531;
         }
 
+        .btn-inpatient-module {
+            background-color: #218380;
+            border-color: #218380;
+            color: white;
+        }
+
         .btn:hover {
             filter: brightness(90%); /* Slightly darker color on hover */
         }
@@ -107,6 +113,8 @@
     <div class="btn-container">
         <!-- Patient Admission -->
         <a href="{{ url_for('patient_admission') }}" class="btn btn-patient-admission">Patient Admission</a>
+        <!-- Add Inpatient Module Button -->
+        <a href="{{ url_for('inpatient_module') }}" class="btn btn-inpatient-module">Inpatient Module</a>
         <!-- Manage Patients -->
         <a href="{{ url_for('manage_patients') }}" class="btn btn-manage-patients">Manage Patients</a>
         <!-- Manage Users -->
