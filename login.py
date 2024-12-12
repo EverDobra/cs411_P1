@@ -333,8 +333,6 @@ def login():
 
 
 @app.route('/manage_users', methods=['GET', 'POST'])
-@app.route('/manage_users', methods=['GET', 'POST'])
-@app.route('/manage_users', methods=['GET', 'POST'])
 def manage_users():
     if 'username' not in session or session['username'] is None:
         flash('You must be logged in to access this page.', 'danger')

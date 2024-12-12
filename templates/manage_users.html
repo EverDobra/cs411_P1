@@ -41,26 +41,20 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .btn-container {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .btn-primary {
-            background-color: #218380; /* Updated blue button color */
-            border-color: #218380;
-            border-radius: 10px;
-            font-weight: bold;
-            padding: 6px 12px;
-        }
-
         .btn-danger {
             background-color: #F71735; /* Updated red button color */
             border-color: #F71735;
             border-radius: 10px;
             font-weight: bold;
             padding: 6px 12px;
+        }
+
+        .btn-danger:hover {
+            background-color: #d2162e;
+        }
+
+        .btn-container {
+            text-align: right; /* Align buttons to the right */
         }
 
         .btn-secondary {
@@ -86,8 +80,15 @@
         }
 
         .form-container .btn-primary {
+            background-color: #007B8F;
+            border-color: #007B8F;
+            color: white;
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 5px 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 100%;
-            margin-top: 15px;
         }
     </style>
 </head>
@@ -99,7 +100,7 @@
         <tr>
             <th>Username</th>
             <th>Role</th>
-            <th>Actions</th>
+            <th class="text-right">Actions</th> <!-- Align header to the right -->
         </tr>
         </thead>
         <tbody>
@@ -108,7 +109,6 @@
             <td>{{ username }}</td>
             <td>{{ details.role }}</td>
             <td class="btn-container">
-                <button class="btn btn-primary btn-sm" onclick="openEditModal('{{ username }}')">Edit</button>
                 <form action="{{ url_for('manage_users') }}" method="POST" style="display:inline;">
                     <input type="hidden" name="username" value="{{ username }}">
                     <input type="hidden" name="action" value="delete">
@@ -147,14 +147,6 @@
 
     <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
 </div>
-
-<script>
-    function openEditModal(username) {
-        document.getElementById('modalUsername').value = username;
-        const modal = new bootstrap.Modal(document.getElementById('editModal'));
-        modal.show();
-    }
-</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
