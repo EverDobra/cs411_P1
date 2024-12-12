@@ -12,8 +12,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Subtle gradient background */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #004a5e, #b0e0e6); /* Subtle gradient background */
+            font-family: 'Montserrat', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .login-container {
@@ -78,24 +78,6 @@
             margin-top: 10px;
         }
 
-        /* Add subtle decorative lines to frame the container */
-        .login-container::before,
-        .login-container::after {
-            content: '';
-            position: absolute;
-            height: 80%;
-            width: 2px;
-            background-color: rgba(0, 123, 143, 0.3);
-            top: 10%;
-        }
-
-        .login-container::before {
-            left: calc(50% - 210px); /* Left line at the edge of the container */
-        }
-
-        .login-container::after {
-            right: calc(50% - 210px); /* Right line at the edge of the container */
-        }
     </style>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>

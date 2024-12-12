@@ -13,7 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
+            font-family: 'Raleway', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
         }
 
         .dashboard-container {
@@ -24,6 +24,26 @@
             text-align: center;
             width: 500px; /* Adjusted container width */
             border: 1px solid #e6e6e6; /* Subtle border */
+            position: relative;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #F71735;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            padding: 8px 16px;
+            text-transform: uppercase;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            background-color: #d2162e;
         }
 
         .icon {
@@ -92,7 +112,6 @@
             color: #37000a;
             border-color: #0d1531;
         }
-
         .btn-inpatient-module {
             background-color: #218380;
             border-color: #218380;
@@ -106,6 +125,7 @@
 </head>
 <body>
 <div class="dashboard-container">
+    <button class="logout-btn" onclick="window.location.href='{{ url_for('logout') }}'">Logout</button>
     <div class="icon">
         &#x1F4BB; <!-- Icon (Laptop) -->
     </div>

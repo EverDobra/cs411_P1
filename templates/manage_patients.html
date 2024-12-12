@@ -176,7 +176,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="room" class="form-label">Room</label>
-                            <input type="text" class="form-control" id="room" name="room">
+                            <input type="text" class="form-control" id="room" name="room" disabled>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -202,7 +202,7 @@
         document.getElementById('gender').value = selectedPatient.gender;
         document.getElementById('contact').value = selectedPatient.contact;
         document.getElementById('emergency_contact').value = selectedPatient.emergency_contact;
-        document.getElementById('room').value = selectedPatient.room || '';
+        document.getElementById('room').value = selectedPatient.room || 'Not Assigned';
 
         const modal = new bootstrap.Modal(document.getElementById('editModal'));
         modal.show();

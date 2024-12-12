@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import check_password_hash, generate_password_hash
 import requests
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'secret_key_here'
@@ -9,11 +10,24 @@ users = {
     'doctor_user': {'password': generate_password_hash('password1'), 'role': 'doctor'},
     'admin_user': {'password': generate_password_hash('password2'), 'role': 'admin'},
     'test_user': {'password': generate_password_hash('password3'), 'role': 'user'},
-    'lab_user': {'password': generate_password_hash('password4'), 'role': 'laboratorist'}
+    'lab_user': {'password': generate_password_hash('password4'), 'role': 'laboratorist'},
+    'nurse_user': {'password': generate_password_hash('password5'), 'role': 'nurse'}
 }
+
 
 failed_attempts = {}
 patients = []
+
+
+# Define a custom date filter
+def format_date(value, format='%Y-%m-%d'):
+    if isinstance(value, datetime):
+        return value.strftime(format)
+    return value
+
+
+# Register the filter with Jinja2
+app.jinja_env.filters['date'] = format_date
 
 def reset_failed_attempts(username):
     failed_attempts[username] = 0
@@ -29,76 +43,91 @@ def index():
 # Global variables for rooms and inpatients
 rooms = {101: "Vacant", 102: "Occupied", 103: "Vacant", 104: "Vacant"}
 inpatients = []
+from datetime import datetime
 
-
-@app.route('/inpatient_module', methods=['GET', 'POST'])
-@app.route('/inpatient_module', methods=['GET', 'POST'])
 @app.route('/inpatient_module', methods=['GET', 'POST'])
 def inpatient_module():
+    global rooms, patients, inpatients
+
     if 'username' not in session or session['username'] is None:
         flash('You must be logged in to access this page.', 'danger')
         return redirect(url_for('login'))
 
-    global patients
-    global rooms
-    global inpatients
-
     if request.method == 'POST':
         action = request.form.get('action')
 
-        # Assign a room to a patient
+        # Assign room to a patient
         if action == 'assign_room':
             patient_id = int(request.form['patient_id'])
             new_room = int(request.form['room'])
+            assign_date = request.form.get('assign_date') or datetime.now().strftime('%Y-%m-%d')
+            discharge_date = request.form.get('discharge_date')
 
-            # Find the patient in the list
-            patient = next((p for p in patients if p['id'] == patient_id), None)
+            # Find the patient
+            patient = next((p for p in patients if p["id"] == patient_id), None)
             if not patient:
                 flash('Patient not found!', 'danger')
                 return redirect(url_for('inpatient_module'))
 
-            # Check if the patient already has a room
+            # Check if the patient already has a room assigned
             if patient.get('room'):
                 old_room = int(patient['room'])
                 if old_room == new_room:
                     flash(f"Patient is already in Room {old_room}.", 'warning')
                 else:
-                    # Prompt for confirmation
+                    # Store room reassignment request in session
                     session['pending_room_change'] = {
                         'patient_id': patient_id,
-                        'new_room': new_room
+                        'new_room': new_room,
+                        'assign_date': assign_date,
+                        'discharge_date': discharge_date,
                     }
                     flash(f"Patient is currently in Room {old_room}. Confirm to move to Room {new_room}.", 'info')
                     return redirect(url_for('inpatient_module'))
-
-            # If no room is assigned, assign the new room
             else:
+                # Assign room if vacant
                 if rooms[new_room] == "Vacant":
                     rooms[new_room] = "Occupied"
                     patient['room'] = new_room
-                    patient['admission_date'] = request.form.get('admission_date', 'N/A')
+                    patient['admission_date'] = assign_date
+                    patient['discharge_date'] = discharge_date
                     inpatients.append(patient)
-                    flash(f'Room {new_room} assigned to {patient["name"]}.', 'success')
+                    flash(f"Room {new_room} assigned to {patient['name']}.", 'success')
                 else:
                     flash('Room is already occupied!', 'danger')
 
-        # Confirm room change
         elif action == 'confirm_room_change':
+            # Retrieve pending change from session
             pending_change = session.pop('pending_room_change', None)
             if pending_change:
                 patient_id = pending_change['patient_id']
                 new_room = pending_change['new_room']
+                assign_date = pending_change['assign_date']
+                discharge_date = pending_change['discharge_date']
 
-                # Find the patient
-                patient = next((p for p in patients if p['id'] == patient_id), None)
+                # Locate the patient
+                patient = next((p for p in patients if p["id"] == patient_id), None)
                 if patient:
-                    old_room = int(patient['room'])
-                    rooms[old_room] = "Vacant"
-                    rooms[new_room] = "Occupied"
+                    old_room = patient.get('room')
+                    if old_room and old_room != "None":
+                        # Make the old room vacant
+                        rooms[int(old_room)] = "Vacant"
+                    # Assign the new room
                     patient['room'] = new_room
-                    flash(f"Room changed from {old_room} to {new_room} for {patient['name']}.", 'success')
+                    rooms[int(new_room)] = "Occupied"
+                    patient['admission_date'] = assign_date
+                    patient['discharge_date'] = discharge_date
+
+                    # Update inpatients list for proper synchronization
+                    if patient not in inpatients:
+                        inpatients.append(patient)
+
+                    flash(f"Room reassigned from {old_room or 'None'} to {new_room} for {patient['name']}.", 'success')
                 else:
-                    flash('Patient not found!', 'danger')
+                    flash("Error: Patient not found for reassignment.", 'danger')
+            else:
+                flash("Error: No pending room change request.", 'danger')
+
 
         # Discharge a patient
         elif action == 'discharge':
@@ -106,19 +135,18 @@ def inpatient_module():
             patient = next((p for p in inpatients if p['id'] == patient_id), None)
             if patient:
                 room_number = int(patient['room'])
-                rooms[room_number] = "Vacant"
-                patient['room'] = None
+                rooms[room_number] = "Vacant"  # Make the room vacant
+                patient['room'] = None  # Clear room assignment
                 inpatients.remove(patient)
-                flash(f'{patient["name"]} has been discharged.', 'success')
+                flash(f"{patient['name']} has been discharged.", 'success')
             else:
                 flash('Inpatient not found!', 'danger')
 
-    return render_template(
-        'inpatient_module.html',
-        patients=patients,
-        rooms=rooms,
-        inpatients=inpatients
-    )
+    return render_template('inpatient_module.html', patients=patients, rooms=rooms, inpatients=inpatients)
+
+
+
+
 
 
 
@@ -152,7 +180,7 @@ def manage_patients():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        # Handle editing or assigning a room
+        # Handle editing patient details
         patient_id = int(request.form['patient_id'])
         for patient in patients:
             if patient['id'] == patient_id:
@@ -161,7 +189,7 @@ def manage_patients():
                 patient['gender'] = request.form['gender']
                 patient['contact'] = request.form['contact']
                 patient['emergency_contact'] = request.form['emergency_contact']
-                patient['room'] = request.form['room']
+                # Room field should not be updated
                 flash('Patient details updated successfully!', 'success')
                 break
 
@@ -290,7 +318,11 @@ def manage_users():
     return render_template('manage_users.html', users=users)
 
 
-
+@app.route('/logout')
+def logout():
+    session.clear()  # Clear the session
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('login'))
 # Dashboard routes
 @app.route('/doctor_dashboard')
 def doctor_dashboard():
