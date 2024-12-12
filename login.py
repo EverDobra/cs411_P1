@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask import get_flashed_messages
 import requests
 from datetime import datetime
 
@@ -25,26 +26,28 @@ def nurse_dashboard():
         flash('You must be logged in to access this page.', 'danger')
         return redirect(url_for('login'))
 
-    if session['role'] != 'nurse':
-        flash('Access denied: Only nurses can access this dashboard.', 'danger')
-        return redirect(url_for('index'))
-
     return render_template('nurse_dashboard.html')
 
 
 @app.route('/monitor_inpatients')
 def monitor_inpatients():
     global inpatients  # Ensure we use the global variable
+
     if 'username' not in session or session['username'] is None:
         flash('You must be logged in to access this page.', 'danger')
         return redirect(url_for('login'))
 
-    if session.get('role') != 'nurse':
-        flash('Access denied: Only nurses can access this page.', 'danger')
-        return redirect(url_for('nurse_dashboard'))
+    # Allow access to nurses and admins
+    role = session.get('role')
+    if role not in ['nurse', 'admin']:
+        flash('Access denied: Only nurses or admins can access this page.', 'danger')
+        return redirect(url_for('nurse_dashboard' if role == 'nurse' else 'admin_dashboard'))
 
     # Ensure `inpatients` is defined and passed
-    return render_template('monitor_inpatients.html', patients=inpatients or [])
+    if not inpatients:
+        flash('No inpatients found.', 'info')
+
+    return render_template('monitor_inpatients.html', inpatients=inpatients or [])
 
 
 # Define a custom date filter
@@ -157,7 +160,6 @@ def inpatient_module():
             else:
                 flash("Error: No pending room change request.", 'danger')
 
-
         # Discharge a patient
         elif action == 'discharge':
             patient_id = int(request.form['patient_id'])
@@ -171,7 +173,12 @@ def inpatient_module():
             else:
                 flash('Inpatient not found!', 'danger')
 
-    return render_template('inpatient_module.html', patients=patients, rooms=rooms, inpatients=inpatients)
+    # Determine the appropriate dashboard URL based on user role
+    dashboard_url = url_for('admin_dashboard') if session.get('role') == 'admin' else url_for('doctor_dashboard')
+
+    return render_template('inpatient_module.html', patients=patients, rooms=rooms, inpatients=inpatients,
+                           dashboard_url=dashboard_url)
+
 
 
 
@@ -185,6 +192,10 @@ def patient_admission():
     if 'username' not in session or session['username'] is None:
         flash('You must be logged in to access this page.', 'danger')
         return redirect(url_for('login'))
+
+    # Clear unnecessary flash messages
+    if '_flashes' in session:
+        session.pop('_flashes')
 
     if request.method == 'POST':
         # Capture patient data from the form
@@ -200,13 +211,14 @@ def patient_admission():
             'dob': request.form['dob'],
             'gender': request.form['gender'],
             'contact': request.form['contact'],
-            'emergency_contact': request.form['emergency_contact']
+            'emergency_contact': request.form['emergency_contact'],
         }
         patients.append(patient)
         flash('Patient record added successfully!', 'success')
         return redirect(url_for('patient_admission'))
 
     return render_template('patient_admission.html', patients=patients)
+
 
 
 @app.route('/manage_patients', methods=['GET', 'POST'])
@@ -229,7 +241,9 @@ def manage_patients():
                 flash('Patient details updated successfully!', 'success')
                 break
 
+    # Render the page with patient data
     return render_template('manage_patients.html', patients=patients)
+
 
 @app.route('/delete_patient/<int:patient_id>', methods=['POST'])
 def delete_patient(patient_id):
@@ -238,9 +252,12 @@ def delete_patient(patient_id):
     flash('Patient record deleted successfully!', 'success')
     return redirect(url_for('manage_patients'))
 
-@app.route('/login', methods=['GET', 'POST'])
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Clear previous flash messages
+    get_flashed_messages(with_categories=True)
+
     if 'username' not in session:
         session['username'] = None
         session['captcha_verified'] = False

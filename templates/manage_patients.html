@@ -196,7 +196,9 @@
         </div>
     </div>
 
-    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Admin Dashboard</a>
+    <a href="{{ url_for('admin_dashboard') if session.get('role') == 'admin' else url_for('doctor_dashboard') }}"
+       class="btn btn-secondary">Back to {{ 'Admin' if session.get('role') == 'admin' else 'Doctor' }} Dashboard</a>
+
 </div>
 
 <script>

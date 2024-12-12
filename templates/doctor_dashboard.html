@@ -7,41 +7,89 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #004a5e, #b0e0e6);
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Gradient background */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
+            font-family: 'Raleway', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
         }
 
         .dashboard-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9); /* Slight opacity to separate from background */
+            padding: 40px;
+            border-radius: 25px; /* Rounded corners */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Enhanced shadow for better aesthetics */
             text-align: center;
-            width: 90%;
-            max-width: 600px;
+            width: 500px; /* Adjusted container width */
+            border: 1px solid #e6e6e6; /* Subtle border */
+            position: relative;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #F71735;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            padding: 8px 16px;
+            text-transform: uppercase;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            background-color: #d2162e;
         }
 
         .icon {
             font-size: 100px;
             color: #007bff;
+            margin-bottom: 15px;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 50%; /* Circular background */
+            background-color: #f2f2f2; /* Light background for the icon */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Shadow for the icon */
         }
 
         h2 {
             color: #007bff;
-            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            letter-spacing: 1px; /* Slight letter spacing */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow for depth */
+        }
+
+        .btn-container {
+            margin-top: 30px;
+        }
+
+        .btn {
+            width: 220px; /* Wider buttons */
+            margin: 10px;
+            font-weight: bold;
+            border-radius: 15px; /* Rounded buttons */
+            padding: 12px;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for buttons */
+            text-transform: uppercase; /* Uppercase text for buttons */
         }
 
         .btn-primary {
             background-color: #218380;
             border-color: #218380;
-            font-weight: bold;
-            border-radius: 10px;
-            padding: 10px 20px;
             width: 100%;
-            margin-bottom: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #006459;
+            transform: scale(1.05); /* Slight scaling for hover effect */
         }
 
         .btn-secondary {
@@ -54,13 +102,18 @@
 </head>
 <body>
 <div class="dashboard-container">
+    <!-- Logout Button -->
+    <button class="logout-btn" onclick="window.location.href='{{ url_for('logout') }}'">Logout</button>
+
     <div class="icon">
         &#x2695; <!-- Doctor symbol -->
     </div>
     <h2>Doctor Dashboard</h2>
 
-    <a href="{{ url_for('inpatient_module') }}" class="btn btn-primary">Manage Inpatients</a>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    <div class="btn-container">
+        <a href="{{ url_for('inpatient_module') }}" class="btn btn-primary">Manage Inpatients</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
 </div>
 </body>
 </html>

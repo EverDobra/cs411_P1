@@ -113,12 +113,12 @@
     </div>
     <!-- JavaScript to clear flash messages -->
     <script>
-        setTimeout(function () {
-            const flashMessages = document.querySelector('.flash-messages');
-            if (flashMessages) {
-                flashMessages.style.display = 'none';
-            }
-        }, 5000); // Clear after 5 seconds
+        // Automatically hide flash messages after 3 seconds
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('.error-message');
+            flashMessages.forEach(message => message.remove());
+        }, 3000); // Adjust delay as necessary
     </script>
+
 </body>
 </html>

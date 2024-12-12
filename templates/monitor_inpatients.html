@@ -74,6 +74,7 @@
             background-color: #e6f7fa;
             color: #005f6b;
             transform: scale(1.05);
+
         }
 
         .table thead th {
@@ -107,15 +108,21 @@
         </tr>
         </thead>
         <tbody>
+        {% if inpatients|length > 0 %}
         {% for patient in inpatients %}
         <tr>
-            <td class="tc-masked">{{ '*' * (len(patient.tc) - 4) + patient.tc[-4:] }}</td>
+            <td class="tc-masked">{{ '*' * (patient.tc|length - 4) + patient.tc[-4:] }}</td>
             <td>{{ patient.name }}</td>
             <td>{{ patient.room if patient.room else 'Not Assigned' }}</td>
             <td>{{ patient.admission_date }}</td>
             <td>{{ patient.discharge_date if patient.discharge_date else 'N/A' }}</td>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="5">No inpatients available.</td>
+        </tr>
+        {% endif %}
         </tbody>
     </table>
 
