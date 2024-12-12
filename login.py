@@ -159,8 +159,14 @@ def patient_admission():
 
     if request.method == 'POST':
         # Capture patient data from the form
+        tc = request.form['tc']
+        if any(patient['tc'] == tc for patient in patients):
+            flash(f'A patient with TC {tc} already exists in the system!', 'danger')
+            return redirect(url_for('patient_admission'))
+
         patient = {
             'id': len(patients) + 1,
+            'tc': tc,
             'name': request.form['name'],
             'dob': request.form['dob'],
             'gender': request.form['gender'],
@@ -172,6 +178,7 @@ def patient_admission():
         return redirect(url_for('patient_admission'))
 
     return render_template('patient_admission.html', patients=patients)
+
 
 @app.route('/manage_patients', methods=['GET', 'POST'])
 def manage_patients():
