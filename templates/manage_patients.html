@@ -12,26 +12,26 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Gradient background */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
+            background: linear-gradient(135deg, #004a5e, #b0e0e6);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 0.9); /* Slight opacity to separate from background */
+            background-color: rgba(255, 255, 255, 0.9);
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Enhanced shadow for better aesthetics */
-            width: 90%; /* Responsive container width */
-            max-width: 1200px; /* Ensure max width for larger screens */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 1200px;
         }
 
         h2 {
-            font-size: 36px; /* Larger header */
-            font-weight: bold; /* Bold font */
-            color: #007B8F; /* Matching teal color for branding */
+            font-size: 36px;
+            font-weight: bold;
+            color: #007B8F;
             margin-bottom: 20px;
             text-align: center;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow for depth */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .table {
@@ -49,19 +49,21 @@
             border-radius: 15px;
             padding: 5px 12px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for buttons */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
 
         .btn-primary:hover {
             background-color: #005f6b;
             border-color: #005f6b;
-            transform: scale(1.05); /* Slight scaling for hover effect */
+            transform: scale(1.05);
         }
 
         .btn-danger {
             font-weight: bold;
             border-radius: 15px;
             padding: 5px 12px;
+            width: 100%;
         }
 
         .btn-secondary {
@@ -79,7 +81,7 @@
         .btn-secondary:hover {
             background-color: #e6f7fa;
             color: #005f6b;
-            transform: scale(1.05); /* Hover effect */
+            transform: scale(1.05);
         }
 
         .modal-header {
@@ -108,6 +110,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>TC</th>
             <th>Name</th>
             <th>Date of Birth</th>
             <th>Gender</th>
@@ -121,6 +124,7 @@
         {% for patient in patients %}
         <tr>
             <td>{{ patient.id }}</td>
+            <td>{{ '********' + patient.tc[-4:] }}</td>
             <td>{{ patient.name }}</td>
             <td>{{ patient.dob }}</td>
             <td>{{ patient.gender }}</td>
@@ -150,6 +154,10 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="patient_id" id="patient_id">
+                        <div class="mb-3">
+                            <label for="tc" class="form-label">TC (Unique ID)</label>
+                            <input type="text" class="form-control" id="tc" name="tc" readonly>
+                        </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="name" required>
@@ -197,6 +205,7 @@
         const selectedPatient = patient.find(p => p.id === patientId);
 
         document.getElementById('patient_id').value = selectedPatient.id;
+        document.getElementById('tc').value = '********' + selectedPatient.tc.slice(-4);
         document.getElementById('name').value = selectedPatient.name;
         document.getElementById('dob').value = selectedPatient.dob;
         document.getElementById('gender').value = selectedPatient.gender;

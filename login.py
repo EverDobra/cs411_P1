@@ -19,6 +19,34 @@ failed_attempts = {}
 patients = []
 
 
+@app.route('/nurse_dashboard')
+def nurse_dashboard():
+    if 'username' not in session or session['username'] is None:
+        flash('You must be logged in to access this page.', 'danger')
+        return redirect(url_for('login'))
+
+    if session['role'] != 'nurse':
+        flash('Access denied: Only nurses can access this dashboard.', 'danger')
+        return redirect(url_for('index'))
+
+    return render_template('nurse_dashboard.html')
+
+
+@app.route('/monitor_inpatients')
+def monitor_inpatients():
+    global inpatients  # Ensure we use the global variable
+    if 'username' not in session or session['username'] is None:
+        flash('You must be logged in to access this page.', 'danger')
+        return redirect(url_for('login'))
+
+    if session.get('role') != 'nurse':
+        flash('Access denied: Only nurses can access this page.', 'danger')
+        return redirect(url_for('nurse_dashboard'))
+
+    # Ensure `inpatients` is defined and passed
+    return render_template('monitor_inpatients.html', patients=inpatients or [])
+
+
 # Define a custom date filter
 def format_date(value, format='%Y-%m-%d'):
     if isinstance(value, datetime):
@@ -32,6 +60,7 @@ app.jinja_env.filters['date'] = format_date
 def reset_failed_attempts(username):
     failed_attempts[username] = 0
     session.pop('captcha_verified', None)
+
 
 
 @app.route('/')
@@ -210,6 +239,7 @@ def delete_patient(patient_id):
     return redirect(url_for('manage_patients'))
 
 @app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'username' not in session:
         session['username'] = None
@@ -217,6 +247,7 @@ def login():
 
     show_captcha = False
 
+    # Determine if CAPTCHA should be displayed
     if session['username'] and failed_attempts.get(session['username'], 0) >= 4:
         show_captcha = True
 
@@ -246,24 +277,33 @@ def login():
 
             session['captcha_verified'] = True
 
+        # Validate username and password length
         if len(username) > 16 or len(password) > 16:
             flash('Username or password exceeds character limit of 16.', 'danger')
             return redirect(url_for('login'))
 
+        # Check user credentials
         if username in users and check_password_hash(users[username]['password'], password):
             reset_failed_attempts(username)
             session['username'] = username
+            session['role'] = users[username]['role']
 
             flash('Login successful!', 'success')
-            if users[username]['role'] == 'doctor':
+
+            # Role-based redirection
+            role = users[username]['role']
+            if role == 'doctor':
                 return redirect(url_for('doctor_dashboard'))
-            elif users[username]['role'] == 'admin':
+            elif role == 'admin':
                 return redirect(url_for('admin_dashboard'))
-            elif users[username]['role'] == 'laboratorist':
+            elif role == 'laboratorist':
                 return redirect(url_for('lab_dashboard'))
+            elif role == 'nurse':
+                return redirect(url_for('nurse_dashboard'))
             else:
                 return redirect(url_for('user_dashboard'))
         else:
+            # Handle failed attempts
             failed_attempts[username] = failed_attempts.get(username, 0) + 1
             flash('Incorrect username or password', 'danger')
 

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Inpatients</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #004a5e, #b0e0e6); /* Gradient background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern and clean font */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95); /* Slight opacity for depth */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        h2 {
+            font-size: 36px;
+            font-weight: bold;
+            color: #007B8F;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .table {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            font-weight: bold;
+            border-radius: 15px;
+            padding: 10px;
+            width: 100%;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #218380;
+            border-color: #218380;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #005f6b;
+            border-color: #005f6b;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background-color: #f2f2f2;
+            border: 1px solid #007B8F;
+            color: #007B8F;
+            margin-top: 20px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e6f7fa;
+            color: #005f6b;
+            transform: scale(1.05);
+        }
+
+        .table thead th {
+            background-color: #007B8F;
+            color: white;
+            text-align: center;
+        }
+
+        .table tbody td {
+            text-align: center;
+        }
+
+        .tc-masked {
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Monitor Inpatients</h2>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>TC (Masked)</th>
+            <th>Name</th>
+            <th>Room</th>
+            <th>Admission Date</th>
+            <th>Discharge Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for patient in inpatients %}
+        <tr>
+            <td class="tc-masked">{{ '*' * (len(patient.tc) - 4) + patient.tc[-4:] }}</td>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.room if patient.room else 'Not Assigned' }}</td>
+            <td>{{ patient.admission_date }}</td>
+            <td>{{ patient.discharge_date if patient.discharge_date else 'N/A' }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('nurse_dashboard') }}" class="btn btn-secondary">Back to Nurse Dashboard</a>
+</div>
+</body>
+</html>
