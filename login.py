@@ -14,7 +14,10 @@ users = {
     'lab_user': {'password': generate_password_hash('password4'), 'role': 'laboratorist'},
     'nurse_user': {'password': generate_password_hash('password5'), 'role': 'nurse'}
 }
-
+# In-memory patient database
+# Global variables for rooms and inpatients
+rooms = {101: "Vacant", 102: "Occupied", 103: "Vacant", 104: "Vacant"}
+inpatients = []
 
 failed_attempts = {}
 patients = []
@@ -71,11 +74,8 @@ def index():
     return render_template('index.html')
 
 
-# In-memory patient database
-# Global variables for rooms and inpatients
-rooms = {101: "Vacant", 102: "Occupied", 103: "Vacant", 104: "Vacant"}
-inpatients = []
-from datetime import datetime
+
+
 
 @app.route('/inpatient_module', methods=['GET', 'POST'])
 def inpatient_module():
